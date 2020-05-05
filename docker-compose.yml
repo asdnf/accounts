@@ -14,7 +14,7 @@ services:
       - "8080:8080"
     links:
       - postgres
-#      - kafka
+    #      - kafka
     environment:
       PG_HOST: postgres.service
       PG_PORT: 5432
@@ -35,16 +35,30 @@ services:
           - postgres.service
 
   kafka:
-    image: kafkamanager/kafka-manager
+    image: wurstmeister/kafka
     hostname: kafka.service
+    ports:
+      - "9092:9092"
     environment:
       KAFKA_CREATE_TOPICS: "transactions:1:1,wallet:1:1"
+      KAFKA_ADVERTISED_HOST_NAME: kafka.service
+      KAFKA_ZOOKEEPER_CONNECT: zk.service:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       srv-net:
         aliases:
           - kafka.service
 
-#    ports:
-#      - "9092:9092"
+  zookeeper:
+    image: wurstmeister/zookeeper
+    hostname: zk.service
+    ports:
+      - "2181:2181"
+    networks:
+      srv-net:
+        aliases:
+          - zk.service
+
 #volumes:
 #  logvolume01: {}
