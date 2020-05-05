@@ -4,6 +4,7 @@ services:
   accounts-service:
     container_name: account-service
     domainname: account-service
+    hostname: account-service
     build: .
     ports:
       - "8080:8080"
@@ -19,6 +20,7 @@ services:
   postgres:
     image: postgres
     domainname: postgres
+    hostname: postgres
     environment:
       POSTGRES_DB: accounts
       POSTGRES_PASSWORD: pgpwd
