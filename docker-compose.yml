@@ -9,9 +9,9 @@ services:
     build: .
     ports:
       - "8080:8080"
-    links:
-      - postgres
-      - kafka
+#    links:
+#      - postgres
+#      - kafka
     environment:
       #      PG_HOST: $HOST_NAME
       PG_PORT: 5432
@@ -20,6 +20,8 @@ services:
     env_file:
       - default.env
     image: postgres
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: accounts
       POSTGRES_PASSWORD: pgpwd
