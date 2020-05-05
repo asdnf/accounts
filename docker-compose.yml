@@ -49,6 +49,7 @@ services:
       srv-net:
         aliases:
           - kafka.service
+          - zk.service
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -58,6 +59,7 @@ services:
     networks:
       srv-net:
         aliases:
+          - kafka.service
           - zk.service
 
 #volumes:
