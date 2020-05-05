@@ -9,7 +9,7 @@ services:
 #      - logvolume01:/var/log
     links:
       - postgres
-      - kafka
+#      - kafka
     environment:
       PG_HOST: 95.213.235.166
       PG_PORT: 5432
