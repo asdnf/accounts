@@ -15,6 +15,9 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
+import org.springframework.kafka.listener.MessageListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +29,9 @@ import java.util.UUID;
 public class AppConfig {
 
     public static Logger logger = LoggerFactory.getLogger(AppConfig.class);
-    private Random rnd = new Random();
-
+    private final Random rnd = new Random();
+//    @Autowired
+//    public KafkaMessageListenerContainer<Integer, String> listenerContainer;
     @Autowired
     private KafkaTemplate<String, String> template;
 
@@ -46,6 +50,42 @@ public class AppConfig {
         } catch (JsonProcessingException e) {
             logger.error("wallet write failed", e);
         }
+    }
+
+    public void doSmth() throws InterruptedException {
+//        ContainerProperties containerProps = new ContainerProperties("transactions", "wallet");
+//        containerProps.setMessageListener(new MessageListener<Integer, String>() {
+//            @Override
+//            public void onMessage(ConsumerRecord<Integer, String> message) {
+//                logger.info("received: " + message);
+//            }
+//        });
+
+//        listenerContainer.setBeanName("testAuto");
+//        listenerContainer.start();
+
+//        Thread.sleep(1000); // wait a bit for the container to start
+        template.setDefaultTopic("topic1");
+        template.sendDefault(UUID.randomUUID().toString(), "foo");
+        template.sendDefault(UUID.randomUUID().toString(), "bar");
+        template.sendDefault(UUID.randomUUID().toString(), "baz");
+        template.sendDefault(UUID.randomUUID().toString(), "qux");
+        template.flush();
+        Thread.sleep(1000); // wait a bit for the container to start
+//        listenerContainer.stop();
+
+        logger.info("Stop auto");
+    }
+
+    @Bean
+    public SomeService someService() {
+        return new SomeService() {
+            @Override
+            public Object call() throws Exception {
+                doSmth();
+                return null;
+            }
+        };
     }
 
     @Bean
@@ -74,7 +114,7 @@ public class AppConfig {
     @Bean
     public Map<String, Object> consumerProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka.service:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "95.213.235.166:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group");
 //        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 //        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
@@ -87,7 +127,7 @@ public class AppConfig {
     @Bean
     public Map<String, Object> senderProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka.service:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "95.213.235.166:9092");
 //        props.put(ProducerConfig.RETRIES_CONFIG, 0);
 //        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
 //        props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
