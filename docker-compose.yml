@@ -1,6 +1,9 @@
 version: '2.0'
+# 95.213.235.166
 services:
   accounts-service:
+    container_name: account-service
+    domainname: account-service
     build: .
     ports:
       - "8080:8080"
@@ -11,7 +14,7 @@ services:
       - postgres
 #      - kafka
     environment:
-      PG_HOST: 95.213.235.166
+      PG_HOST: account-service
       PG_PORT: 5432
   postgres:
     image: postgres
