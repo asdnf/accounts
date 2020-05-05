@@ -17,6 +17,7 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: accounts
+      POSTGRES_PASSWORD: pgpwd
     ports:
     - "5432:5432"
 #  kafka:
