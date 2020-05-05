@@ -1,8 +1,5 @@
 version: '2.0'
 
-networks:
-  srv-net:
-
 services:
 
   accounts-service:
