@@ -17,6 +17,8 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: accounts
+    ports:
+    - "5432:5432"
 #  kafka:
 #    image: kafkamanager/kafka-manager
 #    environment:
