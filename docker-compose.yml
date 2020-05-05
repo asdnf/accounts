@@ -6,6 +6,8 @@ networks:
 services:
 
   accounts-service:
+    env_file:
+      - default.env
     container_name: account-service
     hostname: account.service
     build: .
@@ -23,6 +25,8 @@ services:
           - account.service
 
   postgres:
+    env_file:
+      - default.env
     image: postgres
     hostname: postgres.service
     environment:
@@ -34,6 +38,8 @@ services:
           - postgres.service
 
   kafka:
+    env_file:
+      - default.env
     image: spotify/kafka
     hostname: kafka.service
     ports:
