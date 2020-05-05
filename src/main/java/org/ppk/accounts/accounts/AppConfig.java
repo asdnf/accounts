@@ -30,10 +30,10 @@ public class AppConfig {
 
     public static Logger logger = LoggerFactory.getLogger(AppConfig.class);
     private final Random rnd = new Random();
-//    @Autowired
+    //    @Autowired
 //    public KafkaMessageListenerContainer<Integer, String> listenerContainer;
     @Autowired
-    private KafkaTemplate<String, String> template;
+    private KafkaTemplate<String, Transaction> template;
 
     @KafkaListener(topics = "transaction")
     public void listen(ConsumerRecord<String, Transaction> cr) {
@@ -45,11 +45,7 @@ public class AppConfig {
         Transaction transaction = new Transaction(
                 "transaction name: " + UUID.randomUUID().toString(), rnd.nextInt());
 
-        try {
-            template.send("wallet", mapper.writeValueAsString(transaction));
-        } catch (JsonProcessingException e) {
-            logger.error("wallet write failed", e);
-        }
+        template.send("wallet", transaction);
     }
 
     public void doSmth() throws InterruptedException {
