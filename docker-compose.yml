@@ -1,0 +1,28 @@
+version: '2.0'
+services:
+  accounts-service:
+    build: .
+    ports:
+      - "8080:8080"
+#    volumes:
+#      - .:/code
+#      - logvolume01:/var/log
+    links:
+      - postgres
+      - kafka
+    environment:
+      PG_HOST: 95.213.235.166
+      PG_PORT: 5432
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: accounts
+  kafka:
+    image: kafkamanager/kafka-manager
+    environment:
+      ZK_HOSTS: 95.213.235.166
+      KAFKA_CREATE_TOPICS: "transactions:1:1,wallet:1:1"
+    ports:
+      - "9092:9092"
+#volumes:
+#  logvolume01: {}
