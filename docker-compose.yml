@@ -13,7 +13,7 @@ services:
       - "8080:8080"
     links:
       - postgres
-    #      - kafka
+      - kafka
     environment:
       PG_HOST: postgres.service
       PG_PORT: 5432
@@ -40,7 +40,7 @@ services:
       - "2181:2181"
       - "9092:9092"
     environment:
-      ADVERTISED_HOST: 95.213.235.166
+      ADVERTISED_HOST: $HOST_NAME
       ADVERTISED_PORT: 9092
     networks:
       srv-net:
