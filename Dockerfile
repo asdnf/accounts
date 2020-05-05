@@ -1,7 +1,7 @@
 FROM gradle
 WORKDIR /project/
 COPY / .
-RUN ./gradlew build
+RUN /bin/bash ./gradlew build
 
 
 FROM openjdk
