@@ -33,10 +33,17 @@ services:
       srv-net:
         aliases:
           - postgres.service
-#  kafka:
-#    image: kafkamanager/kafka-manager
-#    environment:
-#      KAFKA_CREATE_TOPICS: "transactions:1:1,wallet:1:1"
+
+  kafka:
+    image: kafkamanager/kafka-manager
+    hostname: kafka.service
+    environment:
+      KAFKA_CREATE_TOPICS: "transactions:1:1,wallet:1:1"
+    networks:
+      srv-net:
+        aliases:
+          - kafka.service
+
 #    ports:
 #      - "9092:9092"
 #volumes:
