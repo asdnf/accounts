@@ -1,6 +1,6 @@
 FROM gradle
 WORKDIR /project/
-COPY / /
+COPY / .
 RUN gradle build
 
 
