@@ -9,7 +9,6 @@ services:
     env_file:
       - default.env
     container_name: account-service
-    hostname: account.service
     build: .
     ports:
       - "8080:8080"
@@ -17,38 +16,24 @@ services:
       - postgres
       - kafka
     environment:
-      PG_HOST: postgres.service
+      #      PG_HOST: $HOST_NAME
       PG_PORT: 5432
-    networks:
-      srv-net:
-        aliases:
-          - account.service
 
   postgres:
     env_file:
       - default.env
     image: postgres
-    hostname: postgres.service
     environment:
       POSTGRES_DB: accounts
       POSTGRES_PASSWORD: pgpwd
-    networks:
-      srv-net:
-        aliases:
-          - postgres.service
 
   kafka:
     env_file:
       - default.env
     image: spotify/kafka
-    hostname: kafka.service
     ports:
       - "2181:2181"
       - "9092:9092"
     environment:
-      ADVERTISED_HOST: $HOST_NAME
+      #      ADVERTISED_HOST: $HOST_NAME
       ADVERTISED_PORT: 9092
-    networks:
-      srv-net:
-        aliases:
-          - kafka.service
