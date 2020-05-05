@@ -48,6 +48,11 @@ public class AppConfig {
         template.send("wallet", transaction);
     }
 
+    public Transaction createTransaction() {
+        return new Transaction(
+                "transaction name: " + UUID.randomUUID().toString(), rnd.nextInt());
+    }
+
     public void doSmth() throws InterruptedException {
 //        ContainerProperties containerProps = new ContainerProperties("transactions", "wallet");
 //        containerProps.setMessageListener(new MessageListener<Integer, String>() {
@@ -61,11 +66,11 @@ public class AppConfig {
 //        listenerContainer.start();
 
 //        Thread.sleep(1000); // wait a bit for the container to start
-        template.setDefaultTopic("topic1");
-        template.sendDefault(UUID.randomUUID().toString(), "foo");
-        template.sendDefault(UUID.randomUUID().toString(), "bar");
-        template.sendDefault(UUID.randomUUID().toString(), "baz");
-        template.sendDefault(UUID.randomUUID().toString(), "qux");
+        template.setDefaultTopic("transaction");
+        template.sendDefault("1", createTransaction());
+        template.sendDefault("2", createTransaction());
+        template.sendDefault("1", createTransaction());
+        template.sendDefault("2", createTransaction());
         template.flush();
         Thread.sleep(1000); // wait a bit for the container to start
 //        listenerContainer.stop();
