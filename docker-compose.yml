@@ -1,10 +1,13 @@
 version: '2.0'
 # 95.213.235.166
+
+networks:
+  srv-net:
+
 services:
   accounts-service:
     container_name: account-service
-    domainname: account-service
-    hostname: account-service
+    hostname: account.service
     build: .
     ports:
       - "8080:8080"
@@ -15,15 +18,22 @@ services:
       - postgres
 #      - kafka
     environment:
-      PG_HOST: account-service
+      PG_HOST: postgres.service
       PG_PORT: 5432
+    networks:
+      srv-net:
+        aliases:
+          - account.service
   postgres:
     image: postgres
-    domainname: postgres
-    hostname: postgres
+    hostname: postgres.service
     environment:
       POSTGRES_DB: accounts
       POSTGRES_PASSWORD: pgpwd
+    networks:
+      srv-net:
+        aliases:
+          - postgres.service
 #    ports:
 #    - "5432:5432"
 #  kafka:
