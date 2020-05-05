@@ -1,5 +1,4 @@
 version: '2.0'
-# 95.213.235.166
 
 networks:
   srv-net:
