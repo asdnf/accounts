@@ -18,6 +18,7 @@ services:
       PG_PORT: 5432
   postgres:
     image: postgres
+    domainname: postgres
     environment:
       POSTGRES_DB: accounts
       POSTGRES_PASSWORD: pgpwd
