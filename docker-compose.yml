@@ -41,7 +41,7 @@ services:
       - "2181:2181"
       - "9092:9092"
     environment:
-      ADVERTISED_HOST: kafka.service
+      ADVERTISED_HOST: 95.213.235.166
       ADVERTISED_PORT: 9092
     networks:
       srv-net:
