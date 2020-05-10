@@ -11,6 +11,7 @@ import org.ppk.accounts.dto.Transaction;
 import org.ppk.accounts.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -33,6 +34,10 @@ import java.util.concurrent.Executor;
 public class AppConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
+    @Value("kafka.bootstrap.host")
+    private String kafkaHost;
+    @Value("kafka.bootstrap.port")
+    private String kafkaPort;
 
     @Bean
     public TransactionProcessorService transactionProcessorService() {
@@ -67,7 +72,7 @@ public class AppConfig {
     @Bean
     public KafkaAdmin admin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "95.213.195.157:9092");
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, String.format("%s:%s", kafkaHost, kafkaPort));
         return new KafkaAdmin(configs);
     }
 
@@ -135,7 +140,7 @@ public class AppConfig {
 
     public Map<String, Object> consumerProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "95.213.195.157:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, String.format("%s:%s", kafkaHost, kafkaPort));
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, TransactionDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group");
@@ -147,7 +152,7 @@ public class AppConfig {
 
     public Map<String, Object> senderProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "95.213.195.157:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, String.format("%s:%s", kafkaHost, kafkaPort));
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, TransactionSerializer.class);
 //        props.put(ProducerConfig.RETRIES_CONFIG, 0);
