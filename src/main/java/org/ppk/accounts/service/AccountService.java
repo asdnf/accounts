@@ -17,7 +17,7 @@ public class AccountService {
     @Transactional
     public void generateTenAccounts() {
         for (int i = 0; i < 10; i++) {
-            accountTemplate.save(accountFactory.createAccount(42, "0"));
+            accountTemplate.save(accountFactory.createAccount(42l, 0l));
         }
     }
 

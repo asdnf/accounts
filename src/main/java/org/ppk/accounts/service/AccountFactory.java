@@ -8,7 +8,7 @@ public class AccountFactory {
         return new Account();
     }
 
-    public Account createAccount(Integer owner, String amount) {
+    public Account createAccount(Long owner, Long amount) {
         Account account = createAccount();
         account.setOwner(owner);
         account.setAmount(amount);

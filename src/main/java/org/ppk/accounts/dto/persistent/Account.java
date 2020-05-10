@@ -12,31 +12,33 @@ public class Account {
 
     @Id
     @GeneratedValue
-    private Integer id;
-    private Integer owner;
-    private String amount;
+    private Long id;
+    private Long owner;
+    // I'm not a good specialist about money calculation. So I leave this type as Long.
+    // Possibly we should think about type memory size and proper rounding when picking a type.
+    private Long amount;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getOwner() {
+    public Long getOwner() {
         return owner;
     }
 
-    public void setOwner(Integer owner) {
+    public void setOwner(Long owner) {
         this.owner = owner;
     }
 
-    public String getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 }
