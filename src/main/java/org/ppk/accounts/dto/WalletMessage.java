@@ -1,10 +1,11 @@
 package org.ppk.accounts.dto;
 
+import org.ppk.accounts.dto.persistent.Transaction;
+
 public class WalletMessage {
 
     private String id;
     private Transaction transaction;
-    private String errorFound;
 
     public String getId() {
         return id;
@@ -22,20 +23,11 @@ public class WalletMessage {
         this.transaction = transaction;
     }
 
-    public String getErrorFound() {
-        return errorFound;
-    }
-
-    public void setErrorFound(String errorFound) {
-        this.errorFound = errorFound;
-    }
-
     @Override
     public String toString() {
         return "WalletMessage{" +
                 "id='" + id + '\'' +
                 ", transaction=" + transaction +
-                ", errorFound='" + errorFound + '\'' +
                 '}';
     }
 }
