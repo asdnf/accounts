@@ -62,13 +62,14 @@ public class LeaderRoleService {
             boolean leaseIsValid = checkLeaseIsFresh();
 
             if (leaseIsValid) {
-
-            }
-            String leaderId = lastSyncedResponse.getLeaderId();
-            String thisId = serviceIdentifier.getIdentifier();
-            // We are the leader of cluster. Thus we should process transactions.
-            if (Objects.equals(leaderId, thisId)) {
-                transactionProcessorService.processTransactionsAsLeader();
+                String leaderId = lastSyncedResponse.getLeaderId();
+                String thisId = serviceIdentifier.getIdentifier();
+                // We are the leader of cluster. Thus we should process transactions.
+                if (Objects.equals(leaderId, thisId)) {
+                    transactionProcessorService.processTransactionsAsLeader();
+                }
+            } else {
+                setPhase(Phase.INITIAL, null);
             }
         }
     }
