@@ -1,9 +1,6 @@
 package org.ppk.accounts.dto.persistent;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Transaction {
@@ -16,9 +13,10 @@ public class Transaction {
     // Possibly we should think about type memory size and proper rounding when picking a type.
     private Long amount;
 
+    @ManyToOne
     private Account destination;
 
-    @Column(columnDefinition = "default 0")
+    @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean processed;
 
     public Long getId() {

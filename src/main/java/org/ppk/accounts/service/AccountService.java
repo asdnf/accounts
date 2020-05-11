@@ -1,6 +1,6 @@
 package org.ppk.accounts.service;
 
-import org.ppk.accounts.dao.AccountTemplate;
+import org.ppk.accounts.dao.AccountRepository;
 import org.ppk.accounts.dto.persistent.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 public class AccountService {
 
     @Autowired
-    private AccountTemplate accountTemplate;
+    private AccountRepository accountRepository;
 
     @Autowired
     private AccountFactory accountFactory;
@@ -17,7 +17,7 @@ public class AccountService {
     @Transactional
     public void generateTenAccounts() {
         for (int i = 0; i < 10; i++) {
-            accountTemplate.save(accountFactory.createAccount(42l, 0l));
+            accountRepository.save(accountFactory.createAccount(42l, 0l));
         }
     }
 
@@ -28,7 +28,7 @@ public class AccountService {
 
     @Transactional
     public Account getAccountById(Integer id) {
-        return accountTemplate.getOne(id);
+        return accountRepository.getOne(id);
     }
 
 }

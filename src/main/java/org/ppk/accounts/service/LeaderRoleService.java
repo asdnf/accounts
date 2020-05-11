@@ -28,7 +28,7 @@ public class LeaderRoleService {
     @Autowired
     private TaskExecutor taskExecutor;
     @Autowired
-    private KafkaTemplate<String, SyncLease> leaseTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private SyncLeaseFactory syncLeaseFactory;
     @Autowired
@@ -99,6 +99,7 @@ public class LeaderRoleService {
 
     @KafkaListener(topics = "lease")
     public void listenLease(ConsumerRecord<String, SyncLease> leaseRecord) {
+        logger.info("listenLease");
         SyncLease syncLease = leaseRecord.value();
         if (SyncCommand.SYNC_RESPONSE.toString().equals(syncLease.getCommand())) {
             setPhase(Phase.GOT_LEADER_ID, () -> {
@@ -119,6 +120,7 @@ public class LeaderRoleService {
 
     @Async
     public void postLastKnownLeaderLeaseTask() {
+        logger.info("postLastKnownLeaderLeaseTask");
         String id = uidGenerator.getUID();
         SyncLease syncLease = syncLeaseFactory.createSyncLeaseInstance();
         syncLease.setCommand(SyncCommand.SYNC_RESPONSE.toString());
@@ -126,11 +128,12 @@ public class LeaderRoleService {
         syncLease.setIssueTimeStamp(lastSyncedResponse.getIssueTimeStamp());
         syncLease.setLeaderId(lastSyncedResponse.getLeaderId());
         syncLease.setSerialId(lastSyncedResponse.getSerialId());
-        leaseTemplate.send(id, syncLease);
+        kafkaTemplate.send("lease", syncLease);
     }
 
     @Async
     public void getLeaderTask() {
+        logger.info("getLeaderTask");
         String id = uidGenerator.getUID();
         SyncLease syncLease = syncLeaseFactory.createSyncLeaseInstance();
         syncLease.setCommand(SyncCommand.SYNCHRONIZE.toString());
@@ -139,11 +142,12 @@ public class LeaderRoleService {
         syncLease.setLeaderId(null);
         syncLease.setSerialId(null);
         syncLease.setLeaseTime(null);
-        leaseTemplate.send(id, syncLease);
+        kafkaTemplate.send("lease", syncLease);
     }
 
     @Async
     public void claimThisInstanceALeaderTask() {
+        logger.info("claimThisInstanceALeaderTask");
         String id = uidGenerator.getUID();
         SyncLease syncLease = syncLeaseFactory.createSyncLeaseInstance();
         Date current = currentDateGenerator.getNow();
@@ -153,7 +157,7 @@ public class LeaderRoleService {
         syncLease.setLeaderId(serviceIdentifier.getIdentifier());
         syncLease.setSerialId(0l);
         syncLease.setLeaseTime(LEASE_TIME);
-        leaseTemplate.send(id, syncLease);
+        kafkaTemplate.send("lease", syncLease);
     }
 
     public enum Phase {

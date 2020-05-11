@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.ppk.accounts.dto.Transaction;
+import org.ppk.accounts.dto.persistent.Transaction;
 
 import java.util.Map;
 
@@ -14,6 +14,10 @@ public class TransactionDeserializer implements Deserializer<Transaction> {
 
     @Override
     public Transaction deserialize(String topic, byte[] data) {
+        if (!"transaction".equals(topic)) {
+            return null;
+        }
+
         String strData = new String(data, 0, data.length);
         try {
             return mapper.readValue(strData, Transaction.class);

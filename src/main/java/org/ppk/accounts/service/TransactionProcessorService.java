@@ -1,6 +1,6 @@
 package org.ppk.accounts.service;
 
-import org.ppk.accounts.dao.TransactionTemplate;
+import org.ppk.accounts.dao.TransactionRepository;
 import org.ppk.accounts.dto.WalletMessage;
 import org.ppk.accounts.dto.persistent.Account;
 import org.ppk.accounts.dto.persistent.Transaction;
@@ -16,10 +16,10 @@ public class TransactionProcessorService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionProcessorService.class);
 
     @Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    private KafkaTemplate<String, WalletMessage> walletTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private UIDGenerator uidGenerator;
@@ -29,7 +29,7 @@ public class TransactionProcessorService {
 
     @Transactional
     public void processTransactionsAsLeader() {
-        transactionTemplate.findByProcessedFalse().forEach(tr -> processSingleDBTransaction(tr));
+        transactionRepository.findByProcessedFalse().forEach(tr -> processSingleDBTransaction(tr));
     }
 
     public boolean assertAccountValueNonNegative(long a) {
@@ -77,13 +77,13 @@ public class TransactionProcessorService {
         transaction.setProcessed(true);
         transaction.setAmount(result);
 
-        transactionTemplate.saveAndFlush(transaction);
+        transactionRepository.saveAndFlush(transaction);
 
         String uid = uidGenerator.getUID();
         WalletMessage walletMessage = walletMessageFactory.createWalletMessage();
         walletMessage.setId(uid);
         walletMessage.setTransaction(transaction);
-        walletTemplate.send(uid, walletMessage);
+        kafkaTemplate.send(uid, walletMessage);
     }
 
 
